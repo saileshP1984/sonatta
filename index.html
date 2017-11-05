@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>:: Sonatta Onella - Home ::</title>
+
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<meta charset="UTF-8">
+<meta name="viewport" content="initial-scale=1, maximum-scale=1">
+<meta name="viewport" content="width=device-width">
+<!-- Css Files Start -->
+<link href="css/style.css" rel="stylesheet" type="text/css" />
+<!-- All css -->
+<link href="css/bootstrap.css" rel="stylesheet" type="text/css" />
+<link href="css/floating-form.css" rel="stylesheet" type="text/css" />
+<!-- Custom CSS -->
+<style type="text/css">
+	.row-fluid .span3
+	{
+		background: rgba(0, 0, 0, 0.3);
+	}
+	
+	.row-fluid .span4
+	{
+		background: rgba(0, 0, 0, 0.3);
+	}	
+</style>
+
+<script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="crossorigin="anonymous"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+
+	var _scroll = true, _timer = false, _floatbox = $("#contact_form"), _floatbox_opener = $(".contact-opener") ;
+	_floatbox.css("right", "-360px"); //initial contact form position
+	
+	//Contact form Opener button
+	_floatbox_opener.click(function(){
+		if (_floatbox.hasClass('visiable')){
+            _floatbox.animate({"right":"-360px"}, {duration: 300}).removeClass('visiable');
+        }else{
+           _floatbox.animate({"right":"0px"},  {duration: 300}).addClass('visiable');
+        }
+	});
+	
+	//Effect on Scroll
+	$(window).load(function(){
+		if(_scroll){
+			_floatbox.animate({"top": "0px"},{duration: 300});
+			_scroll = false;
+		}
+		if(_timer !== false){ clearTimeout(_timer); }           
+			_timer = setTimeout(function(){_scroll = true; 
+			_floatbox.animate({"top": "0px"},{easing: "linear"}, {duration: 500});}, 400); 
+	});
+	
+	
+	//Ajax form submit
+    $("#submit_btn").click(function() { 
+        var proceed = true;
+        //simple validation at client's end
+        //loop through each field and we simply change border color to red for invalid fields       
+        $("#contact_form input[required=true], #contact_form textarea[required=true]").each(function(){
+            $(this).css('border-color',''); 
+            if(!$.trim($(this).val())){ //if this field is empty 
+                $(this).css('border-color','red'); //change border color to red   
+                proceed = false; //set do not proceed flag
+            }
+            //check invalid email
+            var email_reg = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/; 
+            if($(this).attr("type")=="email" && !email_reg.test($.trim($(this).val()))){
+                $(this).css('border-color','red'); //change border color to red   
+                proceed = false; //set do not proceed flag              
+            }   
+        });
+       
+        if(proceed) //everything looks good! proceed...
+        {
+            //get input field values data to be sent to server
+            post_data = {
+                'user_name'     : $('input[name=name]').val(), 
+                'user_email'    : $('input[name=email]').val(), 
+                'country_code'  : $('input[name=phone1]').val(), 
+                'phone_number'  : $('input[name=phone2]').val()
+                
+            };
+            
+            //Ajax post data to server
+            $.post('contact_me.php', post_data, function(response){  
+                if(response.type == 'error'){ //load json data from server and output message     
+                    output = '<div class="error">'+response.text+'</div>';
+                }else{
+                    output = '<div class="success">'+response.text+'</div>';
+                    //reset values in all input fields
+                    $("#contact_form  input[required=true], #contact_form textarea[required=true]").val(''); 
+                }
+                $("#contact_form #contact_results").hide().html(output).slideDown();
+            }, 'json');
+        }
+    });
+    
+    //reset previously set border colors and hide all message on .keyup()
+    $("#contact_form  input[required=true], #contact_form textarea[required=true]").keyup(function() { 
+        $(this).css('border-color',''); 
+        $("#result").slideUp();
+    });
+	
+});
+</script>
+
+</head>
+<body>
+
+<!-- Start Main Wrapper -->
+<div id="wrapper" class="home_wrapper"> 
+
+  <!-- Start of Header -->
+  <header id="header" class="hinner">
+    <section class="container">
+      <section class="row"> 
+        <!-- Start of Logo Container -->
+        <section class="span3"> 
+        	<div id="logo"><a href="index.html"> <img src="images/logo-so.png" alt="Logo" /></a></div>
+        </section>
+        <!-- End of Logo Container --> 
+        <!-- start of Social & Nav Container -->
+        <section class="span9"> 
+          <!-- Top Social & Info Start -->
+          <div id="top_social">
+          <div id="top_bar">
+             
+			  
+              <div id="nav_info">
+                <ul>
+				<li> <i class="icon-phone"></i> <a href="#">+91 9820274457</a> </li>
+                <li> <i class="icon-envelope"></i> <a href="#">sales@sonattaonella.com</a> </li>
+                <li><a href ="Onella_Brochure_Final.pdf"><u>Download Brochure</u></a></li>              
+			  </ul>
+              </div>
+			  
+			  
+			  
+          </div>
+          <!-- End of Top Social & Info --> 
+          <!-- start of Navigation -->
+          <nav id="nav">
+            <div class="navbar navbar-inverse">
+              <div class="navbar-inner">
+                <button data-target=".nav-collapse" data-toggle="collapse" class="btn btn-navbar" type="button"> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button>
+                <div class="nav-collapse collapse">
+				  <ul class="nav">
+					<li> <a href="index.html">HOME</a> </li>
+					<li> <a href="overview.html">OVERVIEW</a> </li>
+					<li> <a href="plans.html">PLANS</a> </li>
+					<li> <a href="gallery.html">GALLERY</a> </li>
+					<li> <a href="specifications.html">SPECIFICATIONS</a> </li>
+					<li> <a href="amenities.html">AMENITIES</a> </li>
+					<li> <a href="location.html">LOCATION</a> </li>
+					<li> <a href="contact-us.html">CONTACT</a> </li>
+				  </ul>
+				</div>
+                
+                <!--/.nav-collapse --> 
+              </div>
+              <!-- /.navbar-inner --> 
+            </div>
+          </nav>
+          </div>
+          <!-- End of Navigation --> 
+        </section>
+        <!-- End of Social & Nav Container --> 
+      </section>
+    </section>
+    <!-- start of Main Slider --> 
+  </header>
+  <!-- End of Header -->
+  <section id="main_slider">
+    <ul class="main_slider">
+      <li> <img src="images/banner-1.jpg" alt="Banner Image" /></li>
+      <li> <img src="images/banner-2.jpg" alt="Banner Image" /></li>
+      <li> <img src="images/banner-3.jpg" alt="Banner Image" /></li>
+       <!--<li> <img src="images/banner-4.jpg" alt="Banner Image" /></li>
+      <li> <img src="images/banner-5.jpg" alt="Banner Image" /></li>
+      <li> <img src="images/banner-6.jpg" alt="Banner Image" /></li>
+      <li> <img src="images/banner-7.jpg" alt="Banner Image" /></li>-->
+    </ul>
+    <section class="banner_bottom_full" id="banner_ad" style="margin-bottom:10px;">
+      <section class="container">
+        <section class="row">
+          <article class="span12">
+            <div class="Archeé -spacer adv_banner">
+              <h4>ABOUT ONELLA</h4>
+              <p> ‘Onella’ welcomes you with its arms spread out wide. Soak in every element of nature. The
+meticulous attention to design and details will leave your heart with a feeling of satisfaction.
+Come home to ‘Onella’ where a lifetime of warmth, cozy and tranquil lifestyle awaits you.
+</p>
+            </div>
+          </article>
+          
+        </section>
+      </section>
+    </section>
+  </section>
+  <!-- End of Main Slider --> 
+ 
+
+<!-- Modal -->
+  <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <h4 class="modal-title" id="myModalLabel">Disclaimer</h4>
+      </div>
+      <div class="modal-body">
+      Thank you for visiting our website. We are currently updating our website towards compliance of the newly introduced housing law for the State of Maharashtra i.e. the Real Estate (Regulation and Development) Act, 2016 and the rules and regulations notified thereunder.
+      </br></br>
+      In the interim, no information, images or material which is currently available / displayed on the website shall be deemed to constitute any advertisement, invitation, solicitation, offer or sale of any of our product offerings and we shall not accept any such bookings based on reliance of such currently available information, images and material on the website and further shall not be responsible for any consequences of any action taken by any person or authority relying on material/information or otherwise.
+      </br></br>
+      We shall be back shortly with an updated website. Thank you for your patience.</br>
+      </div>
+    </div>
+    </div>
+  </div>
+
+
+
+<!-- contact form start -->
+<div class="floating-form" id="contact_form">
+<div class="contact-opener">Open Enquiry Form</div>
+    <div class="floating-form-heading">Enquiry Form</div>
+    <div id="contact_results"></div>
+    <div id="contact_body">
+        <label><span>Name <span class="required">*</span></span>
+        	<input type="text" name="name" id="name" required="true" class="input-field">
+        </label>
+        <label><span>Email <span class="required">*</span></span>
+        	<input type="email" name="email" required="true" class="input-field">
+        </label>
+        <label><span>Phone <span class="required">*</span></span>
+        	<input type="text" name="phone1" maxlength="4" placeholder="+91" required="true" class="tel-number-field">
+        	—<input type="text" name="phone2" maxlength="15" required="true" class="tel-number-field long">
+        </label>
+        <label for="subject"><span>Req.</span>
+            <select name="subject" class="select-field">
+            <option value="">Select Option</option>
+			<option value="1 BHK">1 BHK</option>
+            <option value="2 BHK">2 BHK</option>
+            <option value="2.5 BHK">2.5 BHK</option>
+            </select>
+        </label>
+        	<label for="field5"><span>Message <span class="required">*</span></span>
+        	<textarea name="message" id="message" class="textarea-field" required="true"></textarea>
+        </label>
+        <label>
+        	<span>&nbsp;</span><input type="submit" id="submit_btn" value="Submit">
+        </label>
+    </div>
+</div>
+<!-- contact form end -->
+
+ 
+  <!-- start of Feature Section -->
+    <section id="service_holder" class="mbtm">
+
+          <section class="container container-fluid">
+
+            <section class="row-fluid">
+
+              <figure class="service-feature span4 ">
+
+              <section class="service-container">
+
+               <img src="images/1_bhk.png" alt="1 BHK" />
+
+                <h4> 1 BHK DELUXE </h4>
+
+                <!--<p>Lorem ipsum dolor sit amet, cotetuer adipiscing selit. Nam cursus morbi ut mi</p>-->
+				</br>
+				</section>
+
+                 </figure>
+
+              <figure class="service-feature span4">
+
+              <section class="service-container">
+
+               <img src="images/2_bhk.png" alt="2 BHK" />
+
+                <h4> 2 BHK GRANDE </h4>
+
+                <!--<p>Lorem ipsum dolor sit amet, cotetuer adipiscing selit. Nam cursus morbi ut mi</p>-->
+				</br>
+				</section>
+
+                 </figure>
+
+              <figure class="service-feature span4"> 
+
+              <section class="service-container">
+
+              <img src="images/3_bhk.png" alt="2.5 BHK" />
+
+                <h4> 2.5 BHK LUXURY </h4>
+
+                <!--<p>Lorem ipsum dolor sit amet, cotetuer adipiscing selit. Nam cursus morbi ut mi</p>-->
+				</br>
+				</section>
+
+                </figure>
+
+            </section>
+
+          </section>
+
+        </section>
+  <!-- End of Feature Section --> 
+  <!-- Start of Feature Work Section -->
+  <section id="featured_work" class="mbtm">
+    <section class="container">
+    	<section class="feature_title mbtm">
+          <h2> More Than a home.  'Onella' is a life style. </h2>
+        </section>
+     
+        
+        <!-- Feature work Listing -->
+       <section id="feature_holder" class="mbtm" style="margin-bottom:0px;">
+		<section class="container container-fluid">
+		  <section class="row-fluid">
+			<figure class="feature span3"><a href="#"> <img src="images/icons/children's-play-area.png" height="166px" width="166px"  alt="Children's Play Area" />
+			  <h4> Children's Play Area </h4></a>
+			</figure>
+			<figure class="feature span3"><a href="#"> <img src="images/icons/cycling-track.png" height="166px" width="166px"  alt="Cycling Track" />
+			  <h4> Cycling Track </h4></a>
+			</figure>
+			<figure class="feature span3"><a href="#">  <img src="images/icons/gossip-gazebo.png" height="166px" width="166px" alt="Gossip Gazebo" />
+			  <h4> Gossip Gazebo </h4></a>
+			</figure>
+			<figure class="feature span3"><a href="#"> <img src="images/icons/indoor-games.png" height="166px" width="166px" alt="Indoor Games" />
+			  <h4> Indoor Games </h4></a>
+			</figure>
+		  </section>
+	  
+	  
+		  <section class="row-fluid" style="margin-top:2em;">
+			<figure class="feature span3"><a href="#"> <img src="images/icons/jogging-track.png" height="166px" width="166px" alt="Jogging Track" />
+			  <h4> Jogging Track </h4></a>
+			</figure>
+			<figure class="feature span3"><a href="#"> <img src="images/icons/multi-activity-lawn.png" height="166px" width="166px" alt="Multi Activity Lawn" />
+			  <h4> Multi Activity Lawn </h4></a>
+			</figure>
+			<figure class="feature span3"><a href="#">  <img src="images/icons/well-equiped-gym.png" height="166px" width="166px" alt="Well Equiped Gym" />
+			  <h4> Well Equiped Gym </h4></a>
+			</figure>
+			<figure class="feature span3"><a href="#"> <img src="images/icons/yoga-n-aerobics-center.png" height="166px" width="166px" alt="Yoga n Aerobics Center" />
+			  <h4> Yoga &amp; Aerobics Center </h4></a>
+			</figure>
+		  </section>
+	  
+    </section>
+  </section>
+     
+    </section>
+  </section>
+  <!-- End of Feature Work Section --> 
+  
+   
+  <!-- start of footer elements -->
+  <section id="footer_elements">
+     <!-- Our Potential -->
+    <section class="container container-fluid">
+      <section class="row-fluid">
+        <section class="span12 mbtm2"> 
+          <!-- start of Potential -->
+          <section class="mbtm3">
+            <section class="container container-fluid">
+              <section class="row-fluid">
+                <figure class="about-us span12">
+				<div class="row-fluid">
+                  <section class="span12">
+					<div class="feature_title mbtm" style="margin-bottom:2em;">
+						<h2>PROJECT FEATURES</h2>
+					</div>
+					</section>
+					<section class="span5">
+					<ul style="font-size:16px;">
+						<li style="list-style:square;">Solar Power panel</li>
+						<li style="list-style:square;">Rain Water harvesting system</li>
+						<li style="list-style:square;">Lavish Entrance Lobby</li>
+						<li style="list-style:square;">High Speed Lifts including a stretcher lift</li>
+						<li style="list-style:square;">Ample Parking space</li>
+					</ul>
+                  </section>
+				  
+                  <section class="span5">
+					<ul style="font-size:16px;">
+						<li style="list-style:square;">Landscaped and Paved premises</li>
+						<li style="list-style:square;">Earthquake resistant RCC Framed structure</li>
+						<li style="list-style:square;">Diligent water-proofing measures</li>
+						<li style="list-style:square;">Good quality external paint</li>
+					</ul>
+                  </section>
+				  </div>
+                </figure>
+              </section>
+            </section>
+          </section>
+        </section>
+      </section>
+    </section>
+    <!-- Our Potential End --> 
+  </section>
+  <!-- End of Footer Elements --> 
+  <!-- start of footer elements -->
+ 
+  <!-- End of Footer Elements -->
+  <section id="copyright">
+    <section class="container container-fluid">
+      <section class="row-fluid">
+        <section class="span6"> <p>Copyright &copy; 2016, <a href="#"> Sonatta Realty.</a> All Rights Reserved | <a href="disclaimer.html"> Disclaimers </a></p></section>
+        <section class="span6">
+          <ul id="footer_links">
+            <li> <a href="overview.html"> Overview </a> /</li>
+            <li> <a href="plans.html"> Plans </a> /</li>
+            <li> <a href="gallery.html"> Gallery </a> /</li>
+            <li> <a href="specifications.html"> Specification </a> /</li>
+			<li> <a href="amenities.html"> Amenities </a> /</li>
+            <li> <a href="location.html"> Location </a> /</li>
+			
+			<li> <a href="contact-us.html"> Contact </a> </li>
+          </ul>
+        </section>
+      </section>
+    </section>
+  </section>
+</div>
+
+<!-- End of Wrapper --> 
+
+<!-- JS Files Start --> 
+<script type="text/javascript" src="js/lib-1-9-1.js"></script><!-- lib Js --> 
+<script type="text/javascript" src="js/lib-1-7-1.js"></script><!-- lib Js --> 
+<script type="text/javascript" src="js/modernizr.js"></script><!-- Modernizr --> 
+<script type="text/javascript" src="js/easing.js"></script><!-- Easing js --> 
+<script type="text/javascript" src="js/bootstrap.js"></script><!-- Bootstrap --> 
+<script type="text/javascript" src="js/bxslider.js"></script><!-- BX Slider --> 
+<script type="text/javascript" src="js/isotope.js"></script><!-- ISoTope Sorting Filter --> 
+<script type="text/javascript" src="js/grayscale.js"></script><!-- GreyScale --> 
+<script type="text/javascript" src="js/clearInput.js"></script><!-- Input Clear --> 
+<script type="text/javascript" src="js/prettyPhoto.js"></script><!-- Pretty Photo --> 
+<script type="text/javascript" src="js/social.js"></script><!-- Social Media Hover Effect --> 
+<script type="text/javascript" src="js/metro-lj.js"></script> <!-- MouseWheel --> 
+<script type="text/javascript" src="js/nicescroll.js"></script> <!-- jquery nice scroll --> 
+<script type="text/javascript" src="js/scrollin.js"></script> 
+<script type="text/javascript" src="js/jquery.smartTab.js"></script><!-- Time Line / Functions --> 
+<script type="text/javascript" src="js/custom.js"></script><!-- Custom / Functions --> 
+
+<!--[if IE 8]>
+     <script src="js/ie8_fix_maxwidth.js" type="text/javascript"></script>
+<![endif]--> 
+
+<script type="text/javascript">
+  $(window).on('load',function(){
+    $('#myModal').modal('show');
+  });
+</script>
+
+
+<script type="text/css">
+jQuery(document).ready(function() {
+	"use strict";
+	var countElements = $(".scroll-box .grid .gr-box").size();
+	$(".scroll-box .grid").width(countElements*100);
+
+	var scrollbox = $(".scroll-box");
+	var indent = ( $(window).width() - $(".fifteen.columns>.wrap").width() ) / 2;
+
+	setBoxedSlider();
+
+	var animateTime = 1,
+			offsetStep = 5;
+
+	scrollWrapper = $('.scroll-box');
+	scrollContent = $('.scroll-box .grid');
+
+	//event handling for buttons "left", "right"
+	$('.bttL').mousedown(function() {
+		scrollContent.data('loop', true).loopingAnimation($(this), $(this).is('.bttR') );
+	}).bind("mouseup mouseout", function(){
+			//scrollContent.data('loop', false).stop();
+	});
+	$.fn.loopingAnimation = function(el, dir){
+		if(this.data('loop')){
+			var sign = (dir) ? '-=' : '+=';
+			this.animate({ marginLeft: sign + offsetStep + 'px' }, animateTime, function(){ $(this).loopingAnimation(el,dir) });
+		}
+		return false;
+	};
+	//jQuery('.scroll-box').tinyscrollbar({ axis: 'x'});
+
+});
+
+jQuery(window).resize(function(){
+	"use strict";
+	setBoxedSlider();
+	setBoxedSlider();
+});
+function setBoxedSlider(){
+	"use strict";
+	scrollbox = jQuery(".scroll-box");
+
+	if(scrollbox.data("boxed") == "3"){
+		var marginLeft = jQuery('.fifteen.columns').width();
+		marginLeft = (jQuery(window).width() - marginLeft)/2 - 9;
+
+		scrollbox.width(jQuery(window).width() );
+
+		if(marginLeft > 0)
+			scrollbox.closest(".wrap").css("margin-left",(-marginLeft)+"px");
+		scrollbox.closest(".wrap").width(jQuery(window).width());
+	}
+	else if(scrollbox.data("boxed") == "1"){
+		scrollbox.closest(".wrap").css("width","100%");
+		scrollbox.css("width","100%");
+	}
+	else if(scrollbox.data("boxed") == "2") {
+
+		scrollbox.closest(".wrap").css("width","100%");
+		scrollbox.css("width","100%");
+		var indent = jQuery(window).width() - jQuery(".fifteen").width();
+		console.log(indent);
+		scrollbox.width(jQuery(".fifteen").width() + indent/2 + 9);
+	}
+	scrollbox.getNiceScroll().resize();
+}             
+</script>
+</body>
+</html>
